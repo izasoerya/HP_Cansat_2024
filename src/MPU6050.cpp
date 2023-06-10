@@ -35,3 +35,9 @@ float SensorMPU::getAngleY()
 {
     return kalmanX.update(mpu.getAngleY(), mpu.getGyroY());
 }
+
+byte SensorMPU::cError() 
+{
+    Wire.beginTransmission(0x66);
+    return Wire.endTransmission();
+}

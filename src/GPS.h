@@ -3,6 +3,8 @@
 
 #include <NMEAGPS.h>
 
+
+
 class SensorGPS 
 {
 private:
@@ -17,6 +19,10 @@ public:
     byte getDate();
     byte getMonth();
     byte getYear();
+    float getLatitude();
+    float getLongitude();
+    float getAltitudeGPS();
+    byte getSatCount();
 };
 
 #endif

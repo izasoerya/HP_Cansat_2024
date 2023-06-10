@@ -66,3 +66,9 @@ void SensorBMP::throwFirstReading()
         SensorBMP::getTemperature();
     }
 }
+
+byte SensorBMP::cError() 
+{
+    Wire.beginTransmission(0x77);
+    return Wire.endTransmission();
+}

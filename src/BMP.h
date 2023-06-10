@@ -23,6 +23,7 @@ public:
     float getAltitudeFlight(float referencePressure);
     float getAltitudeSimulation(float inputPressure);
     float getAltitudeEEPROM(float referencePressure);
+    byte cError();
 };
 
 #endif
