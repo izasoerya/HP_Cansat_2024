@@ -9,63 +9,6 @@ void SensorGPS::Calibrate() {
     }
 }
 
-byte SensorGPS::getDate() {
-    if (fix.valid.date) {
-        return fix.dateTime.date;
-    }
-    else {
-        return 254;
-    }
-}
-
-byte SensorGPS::getMonth() {
-    if (fix.valid.date) {
-        return fix.dateTime.month;
-    }
-    else {
-        return 254;
-    }
-}
-
-byte SensorGPS::getYear() {
-    if (fix.valid.date) {
-        return fix.dateTime.year;
-    }
-    else {
-        return 254;
-    }
-
-}
-
-byte SensorGPS::getSecond() {
-    if (fix.valid.time) {
-        return fix.dateTime.seconds;
-    }
-    else {
-        return 254;
-    }
-
-}
-
-byte SensorGPS::getMinute() {
-    if (fix.valid.time) {
-        return fix.dateTime.minutes;
-    }
-    else {
-        return 254;
-    }
-
-}
-
-byte SensorGPS::getHour() {
-    if (fix.valid.time) {
-        return fix.dateTime.hours;
-    }
-    else {
-        return 254;
-    }
-}
-
 float SensorGPS::getLatitude() {
     if (fix.valid.location) {
         return fix.latitude();
@@ -100,4 +43,22 @@ byte SensorGPS::getSatCount() {
     else {
         return 254;
     }
+}
+
+void SensorGPS::getCurrentTime( byte &sec, byte &min, byte &hour,
+                                byte &day, byte &mon, byte &year)
+{
+    if (fix.valid.time) 
+    {
+        sec = fix.dateTime.seconds;
+        min = fix.dateTime.minutes;
+        hour = fix.dateTime.hours;
+    }
+    if (fix.valid.date)
+    {
+        day = fix.dateTime.date;
+        mon = fix.dateTime.month;
+        year = fix.dateTime.year;
+    }
+
 }
