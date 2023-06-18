@@ -20,6 +20,7 @@ public:
     void throwFirstReading();
     float getTemperature();
     float getPressure();
+    void getAllData(float &temp, float &press, float &altit, float referencePressure);
     float getAltitudeFlight(float referencePressure);
     float getAltitudeSimulation(float inputPressure);
     float getAltitudeEEPROM(float referencePressure);

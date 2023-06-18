@@ -72,3 +72,13 @@ byte SensorBMP::cError()
     Wire.beginTransmission(0x77);
     return Wire.endTransmission();
 }
+
+void SensorBMP::getAllData(float &temp, float &press, float &altit, float referencePressure)
+{
+    kalmanVar kalman;
+    temp = bmp.temperature;
+    press = bmp.pressure;
+    kalman.Gain = kalman.ErrorEstimate / (kalman.ErrorEstimate + 0.5);
+    altit = kalman.Estimate + kalman.Gain * (bmp.readAltitude(referencePressure/100.0F) - kalman.Estimate);
+    kalman.ErrorEstimate = (0.5 - kalman.Gain) * kalman.ErrorEstimate;
+}

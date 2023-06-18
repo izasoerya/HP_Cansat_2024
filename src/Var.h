@@ -1,11 +1,11 @@
 #include <Arduino.h>
 
 /* MPU VAR */
-float angleX, angleY, Gforce, prevGForce;
+float *angleX, *angleY, *Gforce, *prevGForce;
 byte errorValueMPU;
 
 /* BMP VAR */
-float temperature, pressure, altitudeBMP, prevAltitude;
+float *temperature, *pressure, *altitudeBMP, *prevAltitude;
 float simulationAltitude;
 float referencePressure;
 byte errorValueBMP;
