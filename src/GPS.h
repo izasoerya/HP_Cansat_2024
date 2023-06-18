@@ -23,6 +23,8 @@ public:
     float getLongitude();
     float getAltitudeGPS();
     byte getSatCount();
+    void getCurrentTime(byte &sec, byte &min, byte &hour,
+                        byte &day, byte &mon, byte &year);
 };
 
 #endif

@@ -11,8 +11,8 @@ float referencePressure;
 byte errorValueBMP;
 
 /* GPS VAR */
-byte second, minute, hour;
-byte date, month, year;
+byte *second, *minute, *hour;
+byte *date, *month, *year;
 float latitude, longitude, altitudeGPS, satCount;
 
 /* BATT VAR */
@@ -24,5 +24,5 @@ byte State;
 
 /* TELEMETRY VAR*/
 uint32_t packetCount;
-String echo;
+String echo, telemetryData;
 char buffer[256];

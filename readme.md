@@ -31,11 +31,10 @@ EEPROM
 4. EEPROM reference pressure
 
 
-Dont Forget to SIMP while coding: 
+Call me if there is anything you want to ask! 
 -
 
 ![image](https://c4.wallpaperflare.com/wallpaper/990/162/571/hololive-hololive-english-nanashi-mumei-simple-background-hd-wallpaper-preview.jpg)
 
 
-![image](https://drive.google.com/uc?export=view&id=1ykeL8m0ut5kaXM9GFstVWWu1EuM7Mie1)
 
