@@ -36,4 +36,6 @@ Dont Forget to SIMP while coding:
 
 ![image](https://c4.wallpaperflare.com/wallpaper/990/162/571/hololive-hololive-english-nanashi-mumei-simple-background-hd-wallpaper-preview.jpg)
 
-![image](https://drive.google.com/uc?export=view&id=1_1aOXL-vlZ6EpObK9ZNAGyPwke-XdBh-)
+
+![image](https://drive.google.com/uc?export=view&id=1ykeL8m0ut5kaXM9GFstVWWu1EuM7Mie1)
+
