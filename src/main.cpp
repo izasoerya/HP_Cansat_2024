@@ -32,14 +32,14 @@ void setup() {
 
 void SensorRead()
 {
-  mpu.Calibrate();
-  
-  angleX = mpu.getAngleX();
-  angleY = mpu.getAngleY();
+  angleX = new float;
+  angleY = new float;
 
-  temperature = bmp.getTemperature();
-  pressure    = bmp.getPressure();       // In Pascal
-  altitudeBMP    = bmp.getAltitudeFlight(referencePressure);   
+  
+  mpu.Calibrate();
+
+  mpu.getAllData(*angleX, *angleY);
+  bmp.getAllData(*temperature, *pressure, *altitudeBMP, referencePressure); 
 
   latitude    = gps.getLatitude();       //.7 Precision
   longitude   = gps.getLongitude();      //.7 Precision
@@ -55,12 +55,12 @@ void SendTelemetry()
 
   tele.constructMessage(hour, minute, second,
                         packetCount, 
-                        currentMode, tele.getState(State), altitudeBMP, 
+                        currentMode, tele.getState(State), *altitudeBMP, 
                         HS, PP, FB, 
-                        temperature, batt, pressure, 
+                        *temperature, batt, *pressure, 
                         hour, minute, second, 
                         altitudeGPS, latitude, longitude, 
-                        satCount, angleX, angleY, echo, buffer);
+                        satCount, *angleX, *angleY, echo, buffer);
 }
 
 void loop() {
