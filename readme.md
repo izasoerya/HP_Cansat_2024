@@ -29,3 +29,11 @@ EEPROM
 2. EEPROM packet count
 3. EEPROM state
 4. EEPROM reference pressure
+
+
+Dont Forget to SIMP while coding: 
+-
+
+![image](https://c4.wallpaperflare.com/wallpaper/990/162/571/hololive-hololive-english-nanashi-mumei-simple-background-hd-wallpaper-preview.jpg)
+
+![image](https://drive.google.com/uc?export=view&id=1_1aOXL-vlZ6EpObK9ZNAGyPwke-XdBh-)
