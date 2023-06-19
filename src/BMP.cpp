@@ -19,13 +19,32 @@ bool SensorBMP::begin()
     }
 }
 
-
-float SensorBMP::getAltitudeSimulation(float inputPressure)        //   inputPressure is in Pascal (Pa)
+void SensorBMP::getReferencePressure(float &referencePressure)
 {
-    return bmp.readAltitude(inputPressure/100.0F);
+    referencePressure = bmp.pressure;
 }
 
-float SensorBMP::getAltitudeEEPROM(float referencePressure)     
+
+void SensorBMP::getCurrentData(float &temp, float &press)
+{
+    temp = bmp.temperature;
+    press = bmp.pressure;
+}
+
+void SensorBMP::getAltitudeFlight(float &altitudeFlight, float referencePressure)
+{
+    kalmanVar kalman;
+    kalman.Gain = kalman.ErrorEstimate / (kalman.ErrorEstimate + 0.5);
+    altitudeFlight = kalman.Estimate + kalman.Gain * (bmp.readAltitude(referencePressure/100.0F) - kalman.Estimate);
+    kalman.ErrorEstimate = (0.5 - kalman.Gain) * kalman.ErrorEstimate;
+}
+
+void SensorBMP::getAltitudeSimulation(float &altitudeSimulation, float inputPressure)        //   inputPressure is in Pascal (Pa)
+{
+    altitudeSimulation = bmp.readAltitude(inputPressure/100.0F);
+}
+
+void SensorBMP::getAltitudeEEPROM(float &altitudeBMP, float referencePressure)     
 {
     kalmanVar kalman;
     if(EEPROM.read(11) == 255)
@@ -38,14 +57,14 @@ float SensorBMP::getAltitudeEEPROM(float referencePressure)
     {
         EEPROM.get(11, ePressure);
     }
-    return ePressure;
+    altitudeBMP = bmp.readAltitude(ePressure);
 }
 
-void SensorBMP::throwFirstReading() 
+void SensorBMP::throwFirstReading(float &temp) 
 {
     while (bmp.temperature < 23) 
     {
-        bmp.temperature;
+        temp = bmp.temperature;
     }
 }
 
@@ -53,14 +72,4 @@ byte SensorBMP::cError()
 {
     Wire.beginTransmission(0x77);
     return Wire.endTransmission();
-}
-
-void SensorBMP::getCurrentData(float &temp, float &press, float &altit, float referencePressure)
-{
-    kalmanVar kalman;
-    temp = bmp.temperature;
-    press = bmp.pressure;
-    kalman.Gain = kalman.ErrorEstimate / (kalman.ErrorEstimate + 0.5);
-    altit = kalman.Estimate + kalman.Gain * (bmp.readAltitude(referencePressure/100.0F) - kalman.Estimate);
-    kalman.ErrorEstimate = (0.5 - kalman.Gain) * kalman.ErrorEstimate;
 }

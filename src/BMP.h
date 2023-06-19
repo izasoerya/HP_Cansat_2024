@@ -16,11 +16,16 @@ private:
     float ePressure;
 public:
     SensorBMP();
+
     bool begin();
-    void throwFirstReading();
-    void getCurrentData(float &temp, float &press, float &altit, float referencePressure);
-    float getAltitudeSimulation(float inputPressure);
-    float getAltitudeEEPROM(float referencePressure);
+    void throwFirstReading(float &temp);
+    void getReferencePressure(float &referencePressure);
+    
+    void getCurrentData(float &temp, float &press);
+    void getAltitudeFlight(float &altitudeFlight, float referencePressure);
+    void getAltitudeSimulation(float &altitudeSimulation, float inputPressure);
+
+    void getAltitudeEEPROM(float &altitudeBMP, float referencePressure);
     byte cError();
 };
 

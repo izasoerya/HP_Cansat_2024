@@ -9,6 +9,7 @@ private:
 public:
     Telemetry();
     String getState(byte State);
+    byte detectState(float altitudeBMP, float prevAltitude, byte State, bool logState[]);
     String constructMessage(byte hour, byte minute, byte second,
                             float packetCount,
                             char mode, String getState, float altitudeBMP,
@@ -16,8 +17,7 @@ public:
                             float temperature, float batt, float pressure,
                             byte hour_ms, byte minute_ms, byte second_ms,
                             float altitudeGPS, float latitude, float longitude,
-                            byte satCount, float angleX, float angleY, String echo,
-                            char buffer[256]
+                            byte satCount, float angleX, float angleY, String echo
                             );
 
 
