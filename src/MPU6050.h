@@ -15,7 +15,7 @@ public:
     void Calibrate();
     float getAngleX();
     float getAngleY();
-    void getAllData(float &angleX, float &angleY);
+    void getCurrentData(float &angleX, float &angleY);
     byte cError();
 };
 

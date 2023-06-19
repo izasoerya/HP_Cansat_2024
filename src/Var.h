@@ -13,7 +13,8 @@ byte errorValueBMP;
 /* GPS VAR */
 byte *second, *minute, *hour;
 byte *date, *month, *year;
-float latitude, longitude, altitudeGPS, satCount;
+float *latitude, *longitude, *altitudeGPS; 
+byte *satCount;
 
 /* BATT VAR */
 float batt;

@@ -29,7 +29,7 @@ byte SensorMPU::cError()
     return Wire.endTransmission();
 }
 
-void SensorMPU::getAllData(float &angleX, float &angleY)
+void SensorMPU::getCurrentData(float &angleX, float &angleY)
 {
     angleX = mpu.getAngleX();
     angleY = mpu.getAngleY();

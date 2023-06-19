@@ -24,7 +24,7 @@ void setup() {
   mpu.begin() ? Serial.println("MPU RUN") : Serial.println("Error MPU");
 
   bmp.throwFirstReading();
-  referencePressure = bmp.getPressure();
+
 
   threads.addThread(SensorRead);
   threads.addThread(SendTelemetry);
@@ -36,6 +36,7 @@ void allocateMemory()
   temperature = new float;  pressure = new float;   altitudeBMP = new float;
   second = new byte; minute = new byte; hour = new byte;
   date = new byte; month = new byte; year = new byte;
+  latitude = new float; longitude = new float; altitudeGPS = new float; satCount = new byte;
 }
 
 void deallocateMemory() 
@@ -44,21 +45,23 @@ void deallocateMemory()
   delete temperature; delete pressure; delete altitudeBMP;
   delete second; delete minute; delete year;
   delete date; delete month; delete year;
+  delete latitude; delete longitude; delete altitudeGPS; delete satCount;
 }
 
 void SensorRead()
 {
   allocateMemory();
-  mpu.Calibrate();
-
-  mpu.getAllData(*angleX, *angleY);
-  bmp.getAllData(*temperature, *pressure, *altitudeBMP, referencePressure); 
-  gps.getCurrentTime(*second, *minute, *hour, *date, *month, *year);
   
-  latitude    = gps.getLatitude();       //.7 Precision
-  longitude   = gps.getLongitude();      //.7 Precision
-  altitudeGPS = gps.getAltitudeGPS();
-  satCount    = gps.getSatCount();
+  mpu.Calibrate();
+  mpu.getCurrentData    (*angleX, *angleY);
+  
+  bmp.getCurrentData    (*temperature, *pressure, *altitudeBMP, referencePressure); 
+  
+  gps.getCurrentTime    (*second, *minute, *hour, *date, *month, *year);
+  gps.getCurrentLocation(*latitude, *longitude, *altitudeGPS);
+  gps.getCurrentSatelite(*satCount);
+
+
 }
 
 void SendTelemetry() 
@@ -70,8 +73,8 @@ void SendTelemetry()
                                         HS, PP, FB, 
                                         *temperature, batt, *pressure, 
                                         *hour, *minute, *second, 
-                                        altitudeGPS, latitude, longitude, 
-                                        satCount, *angleX, *angleY, echo, buffer);
+                                        *altitudeGPS, *latitude, *longitude, 
+                                        *satCount, *angleX, *angleY, echo, buffer);
   Serial.print(telemetryData);
   deallocateMemory();
 }

@@ -9,42 +9,6 @@ void SensorGPS::Calibrate() {
     }
 }
 
-float SensorGPS::getLatitude() {
-    if (fix.valid.location) {
-        return fix.latitude();
-    }
-    else {
-        return 254;
-    }
-}
-
-float SensorGPS::getLongitude() {
-    if (fix.valid.location) {
-        return fix.longitude();
-    }
-    else {
-        return 254;
-    }
-}
-
-float SensorGPS::getAltitudeGPS() {
-    if (fix.valid.altitude) {
-        return fix.altitude();
-    }
-    else {
-        return 254;
-    }
-}
-
-byte SensorGPS::getSatCount() {
-    if (fix.valid.satellites) {
-        return fix.satellites;
-    }
-    else {
-        return 254;
-    }
-}
-
 void SensorGPS::getCurrentTime( byte &sec, byte &min, byte &hour,
                                 byte &day, byte &mon, byte &year)
 {
@@ -54,11 +18,42 @@ void SensorGPS::getCurrentTime( byte &sec, byte &min, byte &hour,
         min = fix.dateTime.minutes;
         hour = fix.dateTime.hours;
     }
+    else
+    {
+        sec = 0; min = 0; hour = 0;
+    }
     if (fix.valid.date)
     {
         day = fix.dateTime.date;
         mon = fix.dateTime.month;
         year = fix.dateTime.year;
     }
-
+    else
+    {
+        day = 0; mon = 0; year = 0;
+    }
 }
+
+void SensorGPS::getCurrentLocation(float &latitude, float &longitude, float &altitudeGPS)
+{
+    if (fix.valid.location)
+    {
+        latitude = fix.latitude();
+        longitude = fix.longitude();
+    }
+    if (fix.valid.altitude)
+    {
+        altitudeGPS = fix.altitude();
+    }
+}
+
+void SensorGPS::getCurrentSatelite(byte &sateliteCount)
+{
+    if (fix.valid.satellites) 
+    {
+        sateliteCount = fix.satellites;
+    }
+}
+
+
+

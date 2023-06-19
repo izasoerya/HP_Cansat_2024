@@ -13,18 +13,14 @@ private:
 public:
     SensorGPS();
     void Calibrate();
-    byte getSecond();
-    byte getMinute();
-    byte getHour();
-    byte getDate();
-    byte getMonth();
-    byte getYear();
     float getLatitude();
     float getLongitude();
     float getAltitudeGPS();
     byte getSatCount();
     void getCurrentTime(byte &sec, byte &min, byte &hour,
                         byte &day, byte &mon, byte &year);
+    void getCurrentLocation(float &latitude, float &longitude, float &altitudeGPS);
+    void getCurrentSatelite(byte &sateliteCount);
 };
 
 #endif

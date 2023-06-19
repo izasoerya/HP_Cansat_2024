@@ -18,10 +18,7 @@ public:
     SensorBMP();
     bool begin();
     void throwFirstReading();
-    float getTemperature();
-    float getPressure();
-    void getAllData(float &temp, float &press, float &altit, float referencePressure);
-    float getAltitudeFlight(float referencePressure);
+    void getCurrentData(float &temp, float &press, float &altit, float referencePressure);
     float getAltitudeSimulation(float inputPressure);
     float getAltitudeEEPROM(float referencePressure);
     byte cError();
