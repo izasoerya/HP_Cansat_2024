@@ -38,6 +38,42 @@ String Telemetry::getState(byte State)
     }
 }
 
+byte Telemetry::detectState(float altitudeBMP, float prevAltitude, byte State, bool logState[])
+{
+    if (altitudeBMP < 5 && logState[2] == false)
+    {
+        State = 0; logState[0] = true;  
+    }
+    else if (altitudeBMP >= 5 && logState[2] == false) 
+    {
+        State = 1; logState[1] = true;
+    }
+    else if (altitudeBMP > prevAltitude + 1 && logState[1] == true && logState[3] == false)
+    {
+        State = 2; logState[2] = true;
+    }
+    else if (altitudeBMP > 500 && altitudeBMP <= 600 && logState[2] == true)
+    {
+        State = 3; logState[3] = true;
+    }
+    else if (altitudeBMP > 200 && altitudeBMP <= 500 && logState[3] == true)
+    {
+        State = 4; logState[4] = true;
+    }
+    else if (altitudeBMP > 10 && altitudeBMP <= 200 && logState[4] == true)
+    {
+        State = 5; logState[5] = true;
+    }
+    else if (altitudeBMP <= 10 && logState[5] == true)
+    {
+        State = 6; logState[6] = true;
+    }
+    else {
+        State = -1;
+    }
+    return State;
+}
+
 String Telemetry::constructMessage( byte hour, byte minute, byte second,
                                     float packetCount,
                                     char mode, String getState, float altitudeBMP,
@@ -45,12 +81,12 @@ String Telemetry::constructMessage( byte hour, byte minute, byte second,
                                     float temperature, float batt, float pressure,
                                     byte hour_ms, byte minute_ms, byte second_ms,
                                     float altitudeGPS, float latitude, float longitude,
-                                    byte satCount, float angleX, float angleY, String echo,
-                                    char buffer[256]
+                                    byte satCount, float angleX, float angleY, String echo
                                     ) 
 {
+    char buffer[256];
     memset(buffer, 0, sizeof(buffer));
-        snprintf(buffer, sizeof(buffer),
+    snprintf(buffer, sizeof(buffer),
                  "%04d,"
                  "%02d:%02d:%02d,"
                  "%1d,"
