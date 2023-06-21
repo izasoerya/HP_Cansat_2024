@@ -3,6 +3,8 @@
 
 Telemetry::Telemetry(){}
 
+FlightState::FlightState(){}
+
 enum State
 {
     STANDBY = 0,
@@ -15,7 +17,7 @@ enum State
     INVALID = -1
 };
 
-String Telemetry::getState(byte State)
+String FlightState::getState(byte State)
 {
     switch (State) 
     {
@@ -38,7 +40,7 @@ String Telemetry::getState(byte State)
     }
 }
 
-byte Telemetry::detectState(float altitudeBMP, float prevAltitude, byte State, bool logState[])
+void FlightState::detectState(float altitudeBMP, float prevAltitude, byte State, bool logState[])
 {
     if (altitudeBMP < 5 && logState[2] == false)
     {
@@ -68,10 +70,44 @@ byte Telemetry::detectState(float altitudeBMP, float prevAltitude, byte State, b
     {
         State = 6; logState[6] = true;
     }
-    else {
+    else 
+    {
         State = -1;
     }
-    return State;
+}
+
+/*  TELEMETRY  */
+
+String Telemetry::parseInput(String receiveGCS)
+{
+    readGCSLength = receiveGCS.length();
+    tempReadGCS = new char[readGCSLength+1];
+    finalResult = new String[readGCSLength+1];    
+    
+    strcpy(tempReadGCS, receiveGCS.c_str());
+    for (Counter = 0; Counter < receiveGCS.length(); Counter++)
+    {
+        if (tempReadGCS[Counter] != ',')
+        {
+            finalResult[wordCounter] += tempReadGCS[Counter];
+            finalResult[wordCounter].trim();
+        }
+        else
+        {
+            wordCounter++;
+        }
+    }
+    return *finalResult;
+}
+
+void Telemetry::listCommand(String finalString)
+{
+    Command comm;
+    if (finalString == "CMD1084CXON")
+    {
+        comm.sendReading = true;
+    }
+    
 }
 
 String Telemetry::constructMessage( byte hour, byte minute, byte second,

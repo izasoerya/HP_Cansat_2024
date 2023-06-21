@@ -8,10 +8,11 @@
 #include "Component.h"
 #include "Var.h"
 
-SensorBMP bmp;
-SensorMPU mpu(Wire);
-SensorGPS gps;
-Telemetry tele;
+SensorBMP BMP;
+SensorMPU MPU(Wire);
+SensorGPS GPS;
+Telemetry TELE;
+FlightState FSW;
 
 void SensorRead();
 void ParseTelemetry();
@@ -20,11 +21,11 @@ void SendTelemetry();
 void setup() {
   Serial.begin(9600);
 
-  bmp.begin() ? Serial.println("BMP RUN") : Serial.println("Error BMP"); 
-  mpu.begin() ? Serial.println("MPU RUN") : Serial.println("Error MPU");
+  BMP.begin() ? Serial.println("BMP RUN") : Serial.println("Error BMP"); 
+  MPU.begin() ? Serial.println("MPU RUN") : Serial.println("Error MPU");
 
-  bmp.throwFirstReading(temperature);
-  bmp.getReferencePressure(referencePressure);
+  BMP.throwFirstReading(temperature);
+  BMP.getReferencePressure(referencePressure);
 
   threads.addThread(SensorRead);
   threads.addThread(SendTelemetry);
@@ -32,25 +33,26 @@ void setup() {
 
 void SensorRead()
 {
-  mpu.Calibrate();
-  mpu.getCurrentData(angleX, angleY);
+  MPU.Calibrate();
+  MPU.getCurrentData(angleX, angleY);
   
-  bmp.getCurrentData(temperature, pressure); 
-  bmp.getAltitudeFlight(altitudeBMP, referencePressure);
-  //bmp.getAltitudeEEPROM(altitudeBMP, referencePressure);    Uncomment if want to use EEPROM
-  bmp.getAltitudeSimulation(altitudeBMP, inputPressure);
+  BMP.getCurrentData(temperature, pressure);    //Pressure in Pascal
+  BMP.getAltitudeFlight(altitudeBMP, referencePressure);    //Altitude in meter
+  BMP.getAltitudeSimulation(altitudeBMP, inputPressure);    //Altitude in meter
   
-  gps.getCurrentTime(second, minute, hour, date, month, year);
-  gps.getCurrentLocation(latitude, longitude, altitudeGPS);
-  gps.getCurrentSatelite(satCount);
+  GPS.getCurrentTime(second, minute, hour, date, month, year);    
+  GPS.getCurrentLocation(latitude, longitude, altitudeGPS);
+  GPS.getCurrentSatelite(satCount);
+
+  FSW.detectState(altitudeBMP, prevAltitude, State, logState);
 }
 
 void SendTelemetry() 
 {
 
-  telemetryData = tele.constructMessage(hour, minute, second,
+  telemetryData = TELE.constructMessage(hour, minute, second,
                                         packetCount, 
-                                        currentMode, tele.getState(State), altitudeBMP, 
+                                        currentMode, FSW.getState(State), altitudeBMP, 
                                         HS, PP, FB, 
                                         temperature, batt, pressure, 
                                         hour, minute, second, 
@@ -58,6 +60,17 @@ void SendTelemetry()
                                         satCount, angleX, angleY, echo);
   Serial.print(telemetryData);
 
+}
+
+void ParseTelemetry() 
+{
+  String hasilSerial;
+  hasilSerial = "";
+  while(Serial2.available() > 0)
+  {
+    hasilSerial += (char)Serial2.read();
+  }
+  hasilSerial.trim();
 }
 
 void loop() {

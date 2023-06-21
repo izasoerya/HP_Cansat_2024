@@ -5,11 +5,30 @@ class Telemetry
 {
 private:
     const uint16_t teamID = 1084;
-
+    int readGCSLength;
+    String* finalResult;
+    char* tempReadGCS;
+    byte Counter, wordCounter = 0;
+    
+    struct Command
+    {
+        bool sendReading;
+        bool referenceCalibration;
+        bool timeConversion;
+        bool setActivate;
+        bool setEnable;
+        bool reset;
+        bool manualHS;
+        bool manualPP;
+        bool manualFlag;
+        bool setBuzzer;
+    };
+    
 public:
     Telemetry();
-    String getState(byte State);
-    byte detectState(float altitudeBMP, float prevAltitude, byte State, bool logState[]);
+    
+    String parseInput(String receiveGCS);
+    void listCommand(String finalString);
     String constructMessage(byte hour, byte minute, byte second,
                             float packetCount,
                             char mode, String getState, float altitudeBMP,
@@ -23,5 +42,14 @@ public:
 
 };
 
+class FlightState 
+{
+private : 
+
+public :
+    FlightState();
+    String getState(byte State);
+    void detectState(float altitudeBMP, float prevAltitude, byte State, bool logState[]);
+};
 
 #endif
