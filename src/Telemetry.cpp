@@ -78,7 +78,7 @@ void FlightState::detectState(float altitudeBMP, float prevAltitude, byte State,
 
 /*  TELEMETRY  */
 
-String Telemetry::parseInput(String receiveGCS)
+void Telemetry::parseInput(String receiveGCS)
 {
     readGCSLength = receiveGCS.length();
     tempReadGCS = new char[readGCSLength+1];
@@ -97,17 +97,42 @@ String Telemetry::parseInput(String receiveGCS)
             wordCounter++;
         }
     }
-    return *finalResult;
+    listCommand(String(finalResult[0]+finalResult[1]+finalResult[2]+finalResult[3]));
 }
 
 void Telemetry::listCommand(String finalString)
 {
-    Command comm;
+    Command &GCS = getComm();       //Get struct in private
     if (finalString == "CMD1084CXON")
     {
-        comm.sendReading = true;
+        GCS.sendReading = true;
     }
-    
+    if (finalString == "CMD1084CXOFF")
+    {
+        GCS.sendReading = false;
+    }
+    if (finalString == "CMD1084STGPS")
+    {
+        GCS.timeConversion = true;
+    }
+    if (finalString == "CMD1084CAL")
+    {
+        GCS.referenceCalibration = true;
+    }
+    if (finalString == "CMD1084SIMACTIVATE")
+    {
+        GCS.setActivate = true;
+    }
+    if (finalString == "CMD1084SIMENABLE")
+    {
+        GCS.setEnable = true;
+    }
+    if (finalString == "CMD1084SIMDISABLE")
+    {
+        GCS.setActivate = false;
+        GCS.setEnable = false;
+    }
+
 }
 
 String Telemetry::constructMessage( byte hour, byte minute, byte second,

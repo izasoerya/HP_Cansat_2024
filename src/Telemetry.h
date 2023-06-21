@@ -23,11 +23,12 @@ private:
         bool manualFlag;
         bool setBuzzer;
     };
+    Command &getComm();
     
 public:
     Telemetry();
     
-    String parseInput(String receiveGCS);
+    void parseInput(String receiveGCS);
     void listCommand(String finalString);
     String constructMessage(byte hour, byte minute, byte second,
                             float packetCount,
