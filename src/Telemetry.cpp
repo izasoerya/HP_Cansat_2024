@@ -78,7 +78,7 @@ void FlightState::detectState(float altitudeBMP, float prevAltitude, byte State,
 
 /*  TELEMETRY  */
 
-void Telemetry::parseInput(String receiveGCS)
+void Telemetry::parseInput(String receiveGCS, String &echo)
 {
     readGCSLength = receiveGCS.length();
     tempReadGCS = new char[readGCSLength+1];
@@ -97,40 +97,50 @@ void Telemetry::parseInput(String receiveGCS)
             wordCounter++;
         }
     }
-    listCommand(String(finalResult[0]+finalResult[1]+finalResult[2]+finalResult[3]));
+    listCommand(String(finalResult[0]+finalResult[1]+finalResult[2]+finalResult[3]), echo);
+    delete tempReadGCS;
+    delete finalResult;
 }
 
-void Telemetry::listCommand(String finalString)
+void Telemetry::listCommand(String finalString, String &echo)
 {
     Command &GCS = getComm();       //Get struct in private
+    
     if (finalString == "CMD1084CXON")
     {
         GCS.sendReading = true;
+        echo = "CXON";
     }
     if (finalString == "CMD1084CXOFF")
     {
         GCS.sendReading = false;
+        echo = "CXOFF";
     }
     if (finalString == "CMD1084STGPS")
     {
         GCS.timeConversion = true;
+        echo = "STGPS";
     }
     if (finalString == "CMD1084CAL")
     {
         GCS.referenceCalibration = true;
+        echo = "CALL";
     }
     if (finalString == "CMD1084SIMACTIVATE")
     {
         GCS.setActivate = true;
+        echo = "SIMACTIVATE";
     }
     if (finalString == "CMD1084SIMENABLE")
     {
         GCS.setEnable = true;
+        echo = "SIMENABLE";
     }
     if (finalString == "CMD1084SIMDISABLE")
     {
         GCS.setActivate = false;
         GCS.setEnable = false;
+        echo = "SIMDISABLE";
     }
 
 }
@@ -165,7 +175,7 @@ String Telemetry::constructMessage( byte hour, byte minute, byte second,
                  temperature, batt, pressure,
                  hour, minute, second,
                  altitudeGPS, latitude, longitude,
-                 satCount, angleX, angleY, echo);
+                 satCount, angleX, angleY, echo.c_str());
 
     return String(buffer);
 }
