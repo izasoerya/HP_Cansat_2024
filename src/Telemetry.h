@@ -28,8 +28,8 @@ private:
 public:
     Telemetry();
     
-    void parseInput(String receiveGCS);
-    void listCommand(String finalString);
+    void parseInput(String receiveGCS, String &echo);
+    void listCommand(String finalString, String &echo);
     String constructMessage(byte hour, byte minute, byte second,
                             float packetCount,
                             char mode, String getState, float altitudeBMP,
