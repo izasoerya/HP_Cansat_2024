@@ -44,31 +44,31 @@ void FlightState::detectState(float altitudeBMP, float prevAltitude, byte State,
 {
     if (altitudeBMP < 5 && logState[2] == false)
     {
-        State = 0; logState[0] = true;  
+        State = 0; logState[0] = true;      //STANDBY
     }
     else if (altitudeBMP >= 5 && logState[2] == false) 
     {
-        State = 1; logState[1] = true;
+        State = 1; logState[1] = true;      //ASCENT
     }
     else if (altitudeBMP > prevAltitude + 1 && logState[1] == true && logState[3] == false)
     {
-        State = 2; logState[2] = true;
+        State = 2; logState[2] = true;      //SEPARATION
     }
     else if (altitudeBMP > 500 && altitudeBMP <= 600 && logState[2] == true)
     {
-        State = 3; logState[3] = true;
+        State = 3; logState[3] = true;      //DESCENT
     }
     else if (altitudeBMP > 200 && altitudeBMP <= 500 && logState[3] == true)
     {
-        State = 4; logState[4] = true;
+        State = 4; logState[4] = true;      //HS_RELEASE
     }
     else if (altitudeBMP > 10 && altitudeBMP <= 200 && logState[4] == true)
     {
-        State = 5; logState[5] = true;
+        State = 5; logState[5] = true;      //PP_RELEASE
     }
     else if (altitudeBMP <= 10 && logState[5] == true)
     {
-        State = 6; logState[6] = true;
+        State = 6; logState[6] = true;      //LANDING
     }
     else 
     {
@@ -78,11 +78,10 @@ void FlightState::detectState(float altitudeBMP, float prevAltitude, byte State,
 
 /*  TELEMETRY  */
 
-void Telemetry::parseInput(String receiveGCS, String &echo)
+void Telemetry::parseInput(String receiveGCS)
 {
-    readGCSLength = receiveGCS.length();
-    tempReadGCS = new char[readGCSLength+1];
-    finalResult = new String[readGCSLength+1];    
+    tempReadGCS = new char[receiveGCS.length() + 1];
+    finalResult = new String[receiveGCS.length() + 1];    
     
     strcpy(tempReadGCS, receiveGCS.c_str());
     for (Counter = 0; Counter < receiveGCS.length(); Counter++)
@@ -97,52 +96,49 @@ void Telemetry::parseInput(String receiveGCS, String &echo)
             wordCounter++;
         }
     }
-    listCommand(String(finalResult[0]+finalResult[1]+finalResult[2]+finalResult[3]), echo);
-    delete tempReadGCS;
-    delete finalResult;
+    listCommand(String(finalResult[0]+finalResult[1]+finalResult[2]+finalResult[3]));
+    delete[] tempReadGCS;
+    delete[] finalResult;
 }
 
-void Telemetry::listCommand(String finalString, String &echo)
-{
-    Command &GCS = getComm();       //Get struct in private
-    
+void Telemetry::listCommand(String finalString)
+{ 
     if (finalString == "CMD1084CXON")
     {
         GCS.sendReading = true;
-        echo = "CXON";
+        GCS.echo = "CXON";
     }
     if (finalString == "CMD1084CXOFF")
     {
         GCS.sendReading = false;
-        echo = "CXOFF";
+        GCS.echo = "CXOFF";
     }
     if (finalString == "CMD1084STGPS")
     {
         GCS.timeConversion = true;
-        echo = "STGPS";
+        GCS.echo = "STGPS";
     }
     if (finalString == "CMD1084CAL")
     {
         GCS.referenceCalibration = true;
-        echo = "CALL";
+        GCS.echo = "CALL";
     }
     if (finalString == "CMD1084SIMACTIVATE")
     {
         GCS.setActivate = true;
-        echo = "SIMACTIVATE";
+        GCS.echo = "SIMACTIVATE";
     }
     if (finalString == "CMD1084SIMENABLE")
     {
         GCS.setEnable = true;
-        echo = "SIMENABLE";
+        GCS.echo = "SIMENABLE";
     }
     if (finalString == "CMD1084SIMDISABLE")
     {
         GCS.setActivate = false;
         GCS.setEnable = false;
-        echo = "SIMDISABLE";
+        GCS.echo = "SIMDISABLE";
     }
-
 }
 
 String Telemetry::constructMessage( byte hour, byte minute, byte second,
@@ -170,7 +166,7 @@ String Telemetry::constructMessage( byte hour, byte minute, byte second,
                  teamID,
                  hour, minute, second,
                  packetCount,
-                 mode, getState, altitudeBMP,
+                 mode, getState.c_str(), altitudeBMP,
                  HS_DEPLOYED, PC_DEPLOYED, MAST_RAISED,
                  temperature, batt, pressure,
                  hour, minute, second,

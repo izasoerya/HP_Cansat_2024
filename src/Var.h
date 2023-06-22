@@ -26,4 +26,5 @@ bool logState[7];
 
 /* TELEMETRY VAR*/
 uint32_t packetCount;
-String telemetryData, echo;
+String telemetryData;
+

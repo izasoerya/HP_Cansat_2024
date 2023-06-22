@@ -13,6 +13,7 @@ SensorMPU MPU(Wire);
 SensorGPS GPS;
 Telemetry TELE;
 FlightState FSW;
+Command COMM;
 
 void SensorRead();
 void ParseTelemetry();
@@ -37,8 +38,9 @@ void SensorRead()
   MPU.getCurrentData(angleX, angleY);
   
   BMP.getCurrentData(temperature, pressure);    //Pressure in Pascal
-  BMP.getAltitudeFlight(altitudeBMP, referencePressure);    //Altitude in meter
-  BMP.getAltitudeSimulation(altitudeBMP, inputPressure);    //Altitude in meter
+  
+  BMP.getAltitudeFlight(altitudeBMP, referencePressure);    
+  BMP.getAltitudeSimulation(altitudeBMP, inputPressure);    
   
   GPS.getCurrentTime(second, minute, hour, date, month, year);    
   GPS.getCurrentLocation(latitude, longitude, altitudeGPS);
@@ -57,7 +59,7 @@ void SendTelemetry()
                                         temperature, batt, pressure, 
                                         hour, minute, second, 
                                         altitudeGPS, latitude, longitude, 
-                                        satCount, angleX, angleY, echo);
+                                        satCount, angleX, angleY, COMM.echo);
   Serial.print(telemetryData);
 
 }

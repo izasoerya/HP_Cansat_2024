@@ -1,6 +1,22 @@
 #ifndef TELEMETRY_H
 #define TELEMETRY_H
 
+struct Command
+{
+    bool sendReading;
+    bool referenceCalibration;
+    bool timeConversion;
+    bool setActivate;
+    bool setEnable;
+    bool reset;
+    bool manualHS;
+    bool manualPP;
+    bool manualFlag;
+    bool setBuzzer;
+    String echo;
+};
+//String echo;
+
 class Telemetry
 {
 private:
@@ -9,27 +25,13 @@ private:
     String* finalResult;
     char* tempReadGCS;
     byte Counter, wordCounter = 0;
-    
-    struct Command
-    {
-        bool sendReading;
-        bool referenceCalibration;
-        bool timeConversion;
-        bool setActivate;
-        bool setEnable;
-        bool reset;
-        bool manualHS;
-        bool manualPP;
-        bool manualFlag;
-        bool setBuzzer;
-    };
-    Command &getComm();
-    
+    Command GCS;
+
 public:
     Telemetry();
     
-    void parseInput(String receiveGCS, String &echo);
-    void listCommand(String finalString, String &echo);
+    void parseInput(String receiveGCS);
+    void listCommand(String finalString);
     String constructMessage(byte hour, byte minute, byte second,
                             float packetCount,
                             char mode, String getState, float altitudeBMP,
@@ -39,7 +41,7 @@ public:
                             float altitudeGPS, float latitude, float longitude,
                             byte satCount, float angleX, float angleY, String echo
                             );
-
+    
 
 };
 
