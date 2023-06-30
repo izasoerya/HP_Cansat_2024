@@ -15,7 +15,6 @@ struct Command
     bool setBuzzer;
     String echo;
 };
-//String echo;
 
 class Telemetry
 {
@@ -51,6 +50,7 @@ private :
 
 public :
     FlightState();
+    void beginServoBuzzer();
     String getState(byte State);
     void detectState(float altitudeBMP, float prevAltitude, byte State, bool logState[]);
 };

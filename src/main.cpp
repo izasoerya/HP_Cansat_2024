@@ -5,7 +5,6 @@
 #include "MPU6050.h"
 #include "GPS.h"
 #include "Telemetry.h"
-#include "Component.h"
 #include "Var.h"
 
 SensorBMP BMP;
@@ -21,6 +20,7 @@ void SendTelemetry();
 
 void setup() {
   Serial.begin(9600);
+  FSW.beginServoBuzzer();
 
   BMP.begin() ? Serial.println("BMP RUN") : Serial.println("Error BMP"); 
   MPU.begin() ? Serial.println("MPU RUN") : Serial.println("Error MPU");
@@ -66,13 +66,12 @@ void SendTelemetry()
 
 void ParseTelemetry() 
 {
-  String hasilSerial;
   hasilSerial = "";
   while(Serial2.available() > 0)
   {
     hasilSerial += (char)Serial2.read();
   }
-  hasilSerial.trim();
+  TELE.parseInput(hasilSerial);
 }
 
 void loop() {
