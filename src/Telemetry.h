@@ -9,11 +9,10 @@ struct Command
     bool setActivate;
     bool setEnable;
     bool reset;
-    bool manualHS;
-    bool manualPP;
-    bool manualFlag;
     bool manualBuzzer;
+    bool manualServo;
     bool setBuzzer;
+    uint16_t degree;
     String echo;
 };
 

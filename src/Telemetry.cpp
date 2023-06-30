@@ -71,17 +71,17 @@ void FlightState::detectState(float altitudeBMP, float prevAltitude, byte State,
     else if (altitudeBMP > 200 && altitudeBMP <= 500 && logState[3] == true)
     {
         State = 4; logState[4] = true;      //HS_RELEASE
-        Servo.stateServo(30);
+        GCS.manualServo? Servo.stateServo(GCS.degree) : Servo.stateServo(30);
     }
     else if (altitudeBMP > 10 && altitudeBMP <= 200 && logState[4] == true)
     {
         State = 5; logState[5] = true;      //PP_RELEASE
-        Servo.stateServo(60);
+        GCS.manualServo? Servo.stateServo(GCS.degree) : Servo.stateServo(60);
     }
     else if (altitudeBMP <= 10 && logState[5] == true)
     {
         State = 6; logState[6] = true;      //LANDING
-        Servo.stateServo(90);
+        GCS.manualServo? Servo.stateServo(GCS.degree) : Servo.stateServo(90);
         GCS.manualBuzzer? Buzz.stateBuzzer(GCS.setBuzzer) : Buzz.stateBuzzer(HIGH);
     }
     else 
@@ -160,12 +160,32 @@ void Telemetry::listCommand(String finalString)
         Buzz.stateBuzzer(HIGH);
         GCS.echo = "BUZZON";
     }
-    if (finalString == "CMD1088BUZZOFF")
+    if (finalString == "CMD1084BUZZOFF")
     {
         GCS.manualBuzzer = true;
         GCS.setBuzzer = false;
         Buzz.stateBuzzer(LOW);
         GCS.echo = "BUZZOFF";
+    }
+    if (finalString == "CMD1084MANHS")
+    {
+        GCS.manualServo = true;
+        GCS.degree = 30;
+    }
+    if (finalString == "CMD1084MANPP")
+    {
+        GCS.manualServo = true;
+        GCS.degree = 60;
+    }
+    if (finalString == "CMD1084MANFLAG")
+    {
+        GCS.manualServo = true;
+        GCS.degree = 90;
+    }
+    if (finalString == "CMD1084MANDISABLE")
+    {
+        GCS.manualServo = false;
+        GCS.manualBuzzer = false;
     }
 }
 
