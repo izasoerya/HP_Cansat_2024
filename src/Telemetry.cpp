@@ -1,5 +1,9 @@
 #include <Arduino.h>
 #include "Telemetry.h"
+#include "Component.h"
+
+MotorServo Servo;
+Buzzer Buzz;
 
 Telemetry::Telemetry(){}
 
@@ -16,6 +20,12 @@ enum State
     LANDED = 6,
     INVALID = -1
 };
+
+void FlightState::beginServoBuzzer()
+{
+    Servo.begin();
+    Buzz.begin();
+}
 
 String FlightState::getState(byte State)
 {
@@ -61,14 +71,18 @@ void FlightState::detectState(float altitudeBMP, float prevAltitude, byte State,
     else if (altitudeBMP > 200 && altitudeBMP <= 500 && logState[3] == true)
     {
         State = 4; logState[4] = true;      //HS_RELEASE
+        Servo.stateServo(30);
     }
     else if (altitudeBMP > 10 && altitudeBMP <= 200 && logState[4] == true)
     {
         State = 5; logState[5] = true;      //PP_RELEASE
+        Servo.stateServo(60);
     }
     else if (altitudeBMP <= 10 && logState[5] == true)
     {
         State = 6; logState[6] = true;      //LANDING
+        Servo.stateServo(90);
+        Buzz.stateBuzzer(HIGH);
     }
     else 
     {
@@ -138,6 +152,16 @@ void Telemetry::listCommand(String finalString)
         GCS.setActivate = false;
         GCS.setEnable = false;
         GCS.echo = "SIMDISABLE";
+    }
+    if (finalString == "CMD1084BUZZON")
+    {
+        Buzz.stateBuzzer(HIGH);
+        GCS.echo = "BUZZON";
+    }
+    if (finalString == "CMD1088BUZZOFF")
+    {
+        Buzz.stateBuzzer(LOW);
+        GCS.echo = "BUZZOFF";
     }
 }
 
