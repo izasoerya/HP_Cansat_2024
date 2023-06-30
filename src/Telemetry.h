@@ -12,6 +12,7 @@ struct Command
     bool manualHS;
     bool manualPP;
     bool manualFlag;
+    bool manualBuzzer;
     bool setBuzzer;
     String echo;
 };
@@ -47,7 +48,7 @@ public:
 class FlightState 
 {
 private : 
-
+    Command GCS;
 public :
     FlightState();
     void beginServoBuzzer();

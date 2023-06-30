@@ -82,7 +82,7 @@ void FlightState::detectState(float altitudeBMP, float prevAltitude, byte State,
     {
         State = 6; logState[6] = true;      //LANDING
         Servo.stateServo(90);
-        Buzz.stateBuzzer(HIGH);
+        GCS.manualBuzzer? Buzz.stateBuzzer(GCS.setBuzzer) : Buzz.stateBuzzer(HIGH);
     }
     else 
     {
@@ -155,11 +155,15 @@ void Telemetry::listCommand(String finalString)
     }
     if (finalString == "CMD1084BUZZON")
     {
+        GCS.manualBuzzer = true;
+        GCS.setBuzzer = true;
         Buzz.stateBuzzer(HIGH);
         GCS.echo = "BUZZON";
     }
     if (finalString == "CMD1088BUZZOFF")
     {
+        GCS.manualBuzzer = true;
+        GCS.setBuzzer = false;
         Buzz.stateBuzzer(LOW);
         GCS.echo = "BUZZOFF";
     }
