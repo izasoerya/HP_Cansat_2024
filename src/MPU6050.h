@@ -12,11 +12,10 @@ private:
 public:
     SensorMPU(TwoWire I2C);
     bool begin();
-    void Calibrate();
-    float getAngleX();
-    float getAngleY();
-    void getCurrentData(float &angleX, float &angleY);
-    byte cError();
+    bool Calibrate();
+    void setData(float &rot_x, float &rot_y, float &rot_z);
+    void setZero(float &rot_x, float &rot_y, float &rot_z);
+    byte status();
 };
 
 

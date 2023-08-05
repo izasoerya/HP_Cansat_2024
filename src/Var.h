@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
 /* MPU VAR */
-float angleX, angleY, Gforce, prevGForce;
+float angleX, angleY, angleZ, Gforce, prevGForce;
 byte errorValueMPU;
 
 /* BMP VAR */

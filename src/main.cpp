@@ -19,59 +19,65 @@ void ParseTelemetry();
 void SendTelemetry();
 
 void setup() {
-  Serial.begin(9600);
-  FSW.beginServoBuzzer();
+	Serial.begin(9600);
+	FSW.beginServoBuzzer();
 
-  BMP.begin() ? Serial.println("BMP RUN") : Serial.println("Error BMP"); 
-  MPU.begin() ? Serial.println("MPU RUN") : Serial.println("Error MPU");
+	BMP.begin() ? Serial.println("BMP RUN") : Serial.println("Error BMP"); 
+	MPU.begin() ? Serial.println("MPU RUN") : Serial.println("Error MPU");
 
-  BMP.throwFirstReading(temperature);
-  BMP.getReferencePressure(referencePressure);
+	BMP.throwFirstReading(temperature);
+	BMP.getReferencePressure(referencePressure);
 
-  threads.addThread(SensorRead);
-  threads.addThread(SendTelemetry);
+	threads.addThread(SensorRead);
+	threads.addThread(SendTelemetry);
+	threads.addThread(ParseTelemetry);
 }
 
 void SensorRead()
 {
-  MPU.Calibrate();
-  MPU.getCurrentData(angleX, angleY);
-  
-  BMP.getCurrentData(temperature, pressure);    //Pressure in Pascal
-  
-  BMP.getAltitudeFlight(altitudeBMP, referencePressure);    
-  BMP.getAltitudeSimulation(altitudeBMP, inputPressure);    
-  
-  GPS.getCurrentTime(second, minute, hour, date, month, year);    
-  GPS.getCurrentLocation(latitude, longitude, altitudeGPS);
-  GPS.getCurrentSatelite(satCount);
+	while(1)
+	{
+		MPU.Calibrate() ? MPU.setData(angleX, angleY, angleZ) : MPU.setZero(angleX, angleY, angleZ); 
 
-  FSW.detectState(altitudeBMP, prevAltitude, State, logState);
+		BMP.getCurrentData(temperature, pressure);    //Pressure in Pascal
+		BMP.getAltitudeFlight(altitudeBMP, referencePressure);    
+		BMP.getAltitudeSimulation(altitudeBMP, inputPressure);    
+
+		GPS.getCurrentTime(second, minute, hour, date, month, year);    
+		GPS.getCurrentLocation(latitude, longitude, altitudeGPS);
+		GPS.getCurrentSatelite(satCount);
+
+		FSW.detectState(altitudeBMP, prevAltitude, State, logState);
+	}
 }
 
 void SendTelemetry() 
 {
-
-  telemetryData = TELE.constructMessage(hour, minute, second,
-                                        packetCount, 
-                                        currentMode, FSW.getState(State), altitudeBMP, 
-                                        HS, PP, FB, 
-                                        temperature, batt, pressure, 
-                                        hour, minute, second, 
-                                        altitudeGPS, latitude, longitude, 
-                                        satCount, angleX, angleY, COMM.echo);
-  Serial.print(telemetryData);
-
+	while(1)
+	{
+		telemetryData = TELE.constructMessage(hour, minute, second,
+											packetCount, 
+											currentMode, FSW.getState(State), altitudeBMP, 
+											HS, PP, FB, 
+											temperature, batt, pressure, 
+											hour, minute, second, 
+											altitudeGPS, latitude, longitude, 
+											satCount, angleX, angleY, COMM.echo);
+		Serial.print(telemetryData);
+	}
 }
 
 void ParseTelemetry() 
 {
-  hasilSerial = "";
-  while(Serial2.available() > 0)
-  {
-    hasilSerial += (char)Serial2.read();
-  }
-  TELE.parseInput(hasilSerial);
+	while(1)
+	{
+		hasilSerial = "";
+		while(Serial2.available() > 0)
+		{
+		hasilSerial += (char)Serial2.read();
+		}
+		TELE.parseInput(hasilSerial);
+	}
 }
 
 void loop() {

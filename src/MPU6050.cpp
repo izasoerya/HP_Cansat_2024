@@ -7,30 +7,36 @@ SensorMPU::SensorMPU(TwoWire I2C):mpu(MPU6050(Wire)) {}
 bool SensorMPU::begin() 
 {
     Wire.begin();
-    if (!mpu.begin()) 
-    {
-        return false;
-    }
-    else 
-    {
-        mpu.calcOffsets(true,true);
-        return true;
-    }
+    byte status = mpu.begin();
+    if (status != 0) return false;
+    mpu.calcOffsets(true, true);
+    return true;
 }
 
-void SensorMPU::Calibrate() 
+bool SensorMPU::Calibrate() 
 {
+    byte condition = this->status();
+    if (condition != 0) return false;
     mpu.update();
+    return true;
 }
 
-byte SensorMPU::cError() 
+byte SensorMPU::status() 
 {
     Wire.beginTransmission(0x66);
     return Wire.endTransmission();
 }
 
-void SensorMPU::getCurrentData(float &angleX, float &angleY)
+void SensorMPU::setData(float &rot_x, float &rot_y, float &rot_z)
 {
-    angleX = mpu.getAngleX();
-    angleY = mpu.getAngleY();
+    rot_x = mpu.getAngleX();
+    rot_y = mpu.getAngleY();
+    rot_z = mpu.getAngleZ();
+}
+
+void SensorMPU::setZero(float &rot_x, float &rot_y, float &rot_z)
+{
+    rot_x = 0;
+    rot_y = 0;
+    rot_z = 0;
 }
