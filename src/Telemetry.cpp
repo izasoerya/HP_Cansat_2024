@@ -110,7 +110,7 @@ void Telemetry::parseInput(String receiveGCS)
             wordCounter++;
         }
     }
-    listCommand(String(finalResult[0]+finalResult[1]+finalResult[2]+finalResult[3]));
+    this->listCommand(String(finalResult[0]+finalResult[1]+finalResult[2]+finalResult[3]));
     delete[] tempReadGCS;
     delete[] finalResult;
 }
@@ -190,7 +190,7 @@ void Telemetry::listCommand(String finalString)
 }
 
 String Telemetry::constructMessage( byte hour, byte minute, byte second,
-                                    float packetCount,
+                                    uint16_t packetCount,
                                     char mode, String getState, float altitudeBMP,
                                     char HS_DEPLOYED, char PC_DEPLOYED, char MAST_RAISED,
                                     float temperature, float batt, float pressure,

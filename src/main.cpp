@@ -74,7 +74,7 @@ void ParseTelemetry()
 		hasilSerial = "";
 		while(Serial2.available() > 0)
 		{
-		hasilSerial += (char)Serial2.read();
+			hasilSerial += (char)Serial2.read();
 		}
 		TELE.parseInput(hasilSerial);
 	}

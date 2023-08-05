@@ -32,7 +32,7 @@ public:
     void parseInput(String receiveGCS);
     void listCommand(String finalString);
     String constructMessage(byte hour, byte minute, byte second,
-                            float packetCount,
+                            uint16_t packetCount,
                             char mode, String getState, float altitudeBMP,
                             char HS_DEPLOYED, char PC_DEPLOYED, char MAST_RAISED,
                             float temperature, float batt, float pressure,
@@ -48,6 +48,7 @@ class FlightState
 {
 private : 
     Command GCS;
+    
 public :
     FlightState();
     void beginServoBuzzer();
